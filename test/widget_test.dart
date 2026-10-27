@@ -186,6 +186,29 @@ void main() {
     expect(find.text('Change template'), findsOneWidget);
   });
 
+  testWidgets('preview opens the PDF export screen', (tester) async {
+    await tester.view.setSize(const Size(800, 1400));
+    addTearDown(tester.view.resetSize);
+    await pumpHome(tester);
+    await openPersonalDetails(tester);
+    await enterNameAndContinue(tester);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Review biodata'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Export biodata'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Export & share'), findsOneWidget);
+    expect(find.text('PDF document'), findsOneWidget);
+    expect(find.text('Create PDF'), findsOneWidget);
+  });
+
   testWidgets('saved biodatas shows a useful empty state', (tester) async {
     await pumpHome(tester);
     await tester.tap(find.text('My biodatas'));
