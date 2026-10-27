@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
 import 'onboarding_screen.dart';
@@ -14,12 +15,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(const Duration(milliseconds: 500), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => OnboardingScreen()),
-      );
-    });
+    _routeAfterStartup();
+  }
+
+  Future<void> _routeAfterStartup() async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    var completed = OnboardingScreen.completedInSession;
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      completed = completed || preferences.getBool('vivah_onboarding_completed') == true;
+    } catch (_) {
+      // If preferences are unavailable, onboarding remains accessible and recoverable.
+    }
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => completed ? const HomeScreen() : OnboardingScreen(),
+      ),
+    );
   }
 
   @override
