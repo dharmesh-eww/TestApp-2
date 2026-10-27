@@ -12,15 +12,46 @@ void main() {
     expect(find.text('Find your style'), findsOneWidget);
   });
 
-  testWidgets('create biodata action explains the next step is not implemented yet', (tester) async {
+  testWidgets('create biodata opens the template gallery', (tester) async {
     await tester.pumpWidget(const VivahBioApp());
 
     await tester.tap(find.text('Get started'));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(
-      find.text('Create biodata will be connected when that screen is implemented.'),
-      findsOneWidget,
-    );
+    expect(find.text('Choose a template'), findsOneWidget);
+    expect(find.text('Pick a style—you can change it later.'), findsOneWidget);
+    expect(find.text('Use This Template'), findsOneWidget);
+    expect(find.text('The Classic'), findsOneWidget);
+  });
+
+  testWidgets('template must be selected before continuing', (tester) async {
+    await tester.pumpWidget(const VivahBioApp());
+    await tester.tap(find.text('Get started'));
+    await tester.pumpAndSettle();
+
+    final button = tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Use This Template'));
+    expect(button.onPressed, isNull);
+
+    await tester.tap(find.text('Modern'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Modern Minimal'));
+    await tester.pumpAndSettle();
+
+    final enabledButton = tester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Use This Template'));
+    expect(enabledButton.onPressed, isNotNull);
+    expect(find.text('Template selected'), findsOneWidget);
+  });
+
+  testWidgets('template category filters update the gallery', (tester) async {
+    await tester.pumpWidget(const VivahBioApp());
+    await tester.tap(find.text('Get started'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Traditional'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Floral Grace'), findsOneWidget);
+    expect(find.text('Golden Tradition'), findsOneWidget);
+    expect(find.text('The Classic'), findsNothing);
   });
 }
