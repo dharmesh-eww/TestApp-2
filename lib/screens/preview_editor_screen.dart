@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
 import 'export_share_screen.dart';
-import 'home_screen.dart';
+import 'vivah_colors.dart';
 
 class PreviewEditorScreen extends StatefulWidget {
   const PreviewEditorScreen({super.key, required this.templateName, required this.templateAccent});
