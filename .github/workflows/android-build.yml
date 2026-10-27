@@ -1,0 +1,80 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: Android build type
+        required: true
+        default: apk
+        type: choice
+        options:
+          - apk
+          - appbundle
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-build-main
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Android ${{ inputs.build_type }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check Dart formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze Flutter code
+        run: flutter analyze
+
+      - name: Build APK
+        if: inputs.build_type == 'apk'
+        run: flutter build apk --release
+
+      - name: Build Android App Bundle
+        if: inputs.build_type == 'appbundle'
+        run: flutter build appbundle --release
+
+      - name: Upload APK artifact
+        if: inputs.build_type == 'apk'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload App Bundle artifact
+        if: inputs.build_type == 'appbundle'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 14
