@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'template_selection_screen.dart';
 import 'vivah_colors.dart';
 import 'saved_biodatas_screen.dart';
+import 'biodata_session.dart';
+import 'preview_editor_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -98,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const _EmptyDraftCard(),
+                  if (BiodataSession.saved.isEmpty) const _EmptyDraftCard() else _RecentDraftCard(item: BiodataSession.saved.first),
                   const SizedBox(height: 30),
                   Row(
                     children: [
@@ -308,6 +310,29 @@ class _CreateCard extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class _RecentDraftCard extends StatelessWidget {
+  const _RecentDraftCard({required this.item});
+  final SavedBiodata item;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: VivahColors.border)),
+    child: Row(children: [
+      Container(width: 48, height: 58, decoration: BoxDecoration(color: VivahColors.rose, borderRadius: BorderRadius.circular(11)), child: const Icon(Icons.description_outlined, color: VivahColors.plum, size: 25)),
+      const SizedBox(width: 12),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(item.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: VivahColors.ink, fontSize: 13, fontWeight: FontWeight.w800)),
+        const SizedBox(height: 4),
+        Text(item.completed ? 'Ready to export' : 'Draft · ${item.templateName}', style: const TextStyle(color: VivahColors.muted, fontSize: 11)),
+        const SizedBox(height: 8),
+        TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent))), style: TextButton.styleFrom(foregroundColor: VivahColors.plum, padding: EdgeInsets.zero, minimumSize: const Size(0, 28), tapTargetSize: MaterialTapTargetSize.shrinkWrap), child: const Text('Continue editing')),
+      ])),
+    ]),
+  );
 }
 
 class _EmptyDraftCard extends StatelessWidget {
