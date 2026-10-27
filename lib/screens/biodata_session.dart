@@ -122,6 +122,7 @@ class BiodataSession {
       completed: completed,
       templateName: templateName,
       fullName: fullName,
+      data: snapshot(),
     );
     if (existing == null) {
       saved.insert(0, item);
@@ -189,6 +190,7 @@ class SavedBiodata {
     required this.completed,
     required this.templateName,
     required this.fullName,
+    required this.data,
   });
 
   final String id;
@@ -197,6 +199,7 @@ class SavedBiodata {
   final bool completed;
   final String templateName;
   final String fullName;
+  final Map<String, Object?> data;
 
   SavedBiodata copyWith({String? id, String? title, DateTime? updatedAt, bool? completed}) =>
       SavedBiodata(
@@ -206,5 +209,6 @@ class SavedBiodata {
         completed: completed ?? this.completed,
         templateName: templateName,
         fullName: fullName,
+        data: data,
       );
 }
