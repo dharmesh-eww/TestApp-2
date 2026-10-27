@@ -30,6 +30,8 @@ class FamilyDetailsDraft {
 }
 
 class FamilyDetailsScreen extends StatefulWidget {
+  static FamilyDetailsDraft? savedDraft;
+
   const FamilyDetailsScreen({
     super.key,
     required this.templateName,
@@ -44,7 +46,6 @@ class FamilyDetailsScreen extends StatefulWidget {
 }
 
 class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
-  static FamilyDetailsDraft? savedDraft;
 
   final _fatherName = TextEditingController();
   final _fatherOccupation = TextEditingController();
@@ -60,7 +61,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final draft = savedDraft;
+    final draft = FamilyDetailsScreen.savedDraft;
     if (draft != null) {
       _fatherName.text = draft.fatherName;
       _fatherOccupation.text = draft.fatherOccupation;
@@ -112,7 +113,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   }
 
   void _saveAndExit() {
-    savedDraft = _makeDraft();
+    FamilyDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
