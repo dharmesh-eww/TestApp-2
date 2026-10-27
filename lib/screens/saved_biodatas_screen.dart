@@ -134,7 +134,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: VivahColors.border)),
                       child: Row(children: [
-                        Container(width: 54, height: 68, decoration: BoxDecoration(color: const Color(0xFFFFFCF6), border: Border.all(color: VivahColors.templateAccent), borderRadius: BorderRadius.circular(7)), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.description_outlined, color: VivahColors.templateAccent, size: 23), const SizedBox(height: 4), Container(width: 28, height: 2, color: VivahColors.border), const SizedBox(height: 3), Container(width: 22, height: 2, color: VivahColors.border)])),
+                        Container(width: 54, height: 68, decoration: BoxDecoration(color: const Color(0xFFFFFCF6), border: Border.all(color: const Color(0xFFB88A4A)), borderRadius: BorderRadius.circular(7)), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.description_outlined, color: const Color(0xFFB88A4A), size: 23), const SizedBox(height: 4), Container(width: 28, height: 2, color: VivahColors.border), const SizedBox(height: 3), Container(width: 22, height: 2, color: VivahColors.border)])),
                         const SizedBox(width: 13),
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(item.title.isEmpty ? 'Untitled biodata' : item.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: VivahColors.ink, fontSize: 14, fontWeight: FontWeight.w800)),
@@ -175,8 +175,4 @@ class _FilterChip extends StatelessWidget {
   final String label; final bool selected; final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => ChoiceChip(label: Text(label), selected: selected, showCheckmark: false, onSelected: (_) => onTap(), selectedColor: VivahColors.plum, backgroundColor: Colors.white, labelStyle: TextStyle(color: selected ? Colors.white : VivahColors.ink, fontSize: 12, fontWeight: FontWeight.w700), side: BorderSide(color: selected ? VivahColors.plum : VivahColors.border));
-}
-
-extension _ColorsForSavedScreen on VivahColors {
-  static const templateAccent = Color(0xFFB88A4A);
 }
