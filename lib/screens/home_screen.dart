@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'template_selection_screen.dart';
+
 class VivahColors {
   static const plum = Color(0xFF642C45);
   static const plumDark = Color(0xFF432032);
@@ -13,6 +15,12 @@ class VivahColors {
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  Future<void> _openTemplates(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen()),
+    );
+  }
 
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context)
@@ -71,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _CreateCard(
-                    onTap: () => _showComingSoon(context, 'Create biodata'),
+                    onTap: () => _openTemplates(context),
                   ),
                   const SizedBox(height: 30),
                   Row(
@@ -113,7 +121,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => _showComingSoon(context, 'Template gallery'),
+                        onPressed: () => _openTemplates(context),
                         style: TextButton.styleFrom(
                           foregroundColor: VivahColors.plum,
                           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -132,7 +140,7 @@ class HomeScreen extends StatelessWidget {
                           title: 'The Classic',
                           subtitle: 'Timeless & elegant',
                           style: _TemplateStyle.classic,
-                          onTap: () => _showComingSoon(context, 'Template selection'),
+                          onTap: () => _openTemplates(context),
                         ),
                         const SizedBox(width: 12),
                         _TemplateCard(
