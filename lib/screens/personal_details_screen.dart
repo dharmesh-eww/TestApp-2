@@ -104,6 +104,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   void _saveAndExit() {
     PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
+    BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
     messenger.showSnackBar(
