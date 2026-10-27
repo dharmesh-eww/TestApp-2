@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
 import 'personal_details_screen.dart';
+import 'biodata_session.dart';
+import 'education_career_screen.dart';
 
 class FamilyDetailsDraft {
   const FamilyDetailsDraft({
@@ -94,8 +96,24 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
         familyBackground: _familyBackground.text.trim(),
       );
 
+  void _syncSession() {
+    final draft = _makeDraft();
+    BiodataSession.templateName = widget.templateName;
+    BiodataSession.templateAccent = widget.templateAccent;
+    BiodataSession.fatherName = draft.fatherName;
+    BiodataSession.fatherOccupation = draft.fatherOccupation;
+    BiodataSession.motherName = draft.motherName;
+    BiodataSession.motherOccupation = draft.motherOccupation;
+    BiodataSession.brothers = draft.brothers;
+    BiodataSession.sisters = draft.sisters;
+    BiodataSession.familyType = draft.familyType ?? '';
+    BiodataSession.familyValues = draft.familyValues ?? '';
+    BiodataSession.familyBackground = draft.familyBackground;
+  }
+
   void _saveAndExit() {
     savedDraft = _makeDraft();
+    _syncSession();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
     messenger.showSnackBar(
@@ -109,16 +127,16 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
 
   void _continue() {
     savedDraft = _makeDraft();
+    _syncSession();
     FocusScope.of(context).unfocus();
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Family details saved. Education & Career is the next step.'),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: VivahColors.plumDark,
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => EducationCareerScreen(
+          templateName: widget.templateName,
+          templateAccent: widget.templateAccent,
         ),
-      );
+      ),
+    );
   }
 
   @override
@@ -137,6 +155,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
                     tooltip: 'Back',
                     onPressed: () {
                       savedDraft = _makeDraft();
+                      _syncSession();
                       Navigator.of(context).maybePop();
                     },
                     icon: const Icon(Icons.arrow_back_rounded, color: VivahColors.plumDark),
