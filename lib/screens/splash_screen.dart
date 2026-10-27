@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
+import 'biodata_session.dart';
 import 'vivah_colors.dart';
 import 'onboarding_screen.dart';
 
@@ -21,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _routeAfterStartup() async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
+    await BiodataSession.loadSaved();
     var completed = OnboardingScreen.completedInSession;
     try {
       final preferences = await SharedPreferences.getInstance();
