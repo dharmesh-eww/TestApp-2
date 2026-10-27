@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
-import 'education_career_screen.dart';
 import 'vivah_colors.dart';
 import 'photo_contact_screen.dart';
 
@@ -66,7 +65,7 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: VivahColors.ivory,
     body: SafeArea(child: Column(children: [
-      _PartnerHeader(templateName: widget.templateName, onBack: () { _save(); Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (_) => EducationCareerScreen(templateName: widget.templateName, templateAccent: widget.templateAccent))); }),
+      _PartnerHeader(templateName: widget.templateName, onBack: () { _save(); Navigator.pop(context); }),
       Expanded(child: ListView(padding: const EdgeInsets.fromLTRB(22, 4, 22, 24), children: [
         const Text('Partner preferences', style: TextStyle(color: VivahColors.plumDark, fontSize: 27, fontWeight: FontWeight.w800)),
         const SizedBox(height: 6),
