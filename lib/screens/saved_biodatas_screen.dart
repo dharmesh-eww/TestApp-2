@@ -86,7 +86,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
   }
 
   void _open(SavedBiodata item) {
-    // This MVP retains form values in memory for the current session.
+    BiodataSession.restore(item);
     Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent)));
   }
 
@@ -148,7 +148,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                           onSelected: (action) {
                             if (action == 'rename') _rename(item);
                             if (action == 'duplicate') _duplicate(item);
-                            if (action == 'export') Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const PreviewEditorScreen(templateName: 'The Classic', templateAccent: VivahColors.gold)));
+                            if (action == 'export') _open(item);
                             if (action == 'delete') _delete(item);
                           },
                           itemBuilder: (_) => const [
