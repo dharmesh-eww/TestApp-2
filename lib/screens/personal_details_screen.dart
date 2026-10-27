@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
+import 'family_details_screen.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
   const PersonalDetailsScreen({super.key, required this.templateName, required this.templateAccent});
@@ -107,13 +108,14 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       return;
     }
     savedDraft = _makeDraft();
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(
-        content: Text('Personal details saved. Family Details is the next step.'),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: VivahColors.plumDark,
-      ));
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => FamilyDetailsScreen(
+          templateName: widget.templateName,
+          templateAccent: widget.templateAccent,
+        ),
+      ),
+    );
   }
 
   @override
