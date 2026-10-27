@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
+import 'biodata_session.dart';
 import 'family_details_screen.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
@@ -83,8 +84,25 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
     city: _city.text.trim(), templateName: widget.templateName,
   );
 
+  void _syncSession() {
+    final draft = _makeDraft();
+    BiodataSession.templateName = widget.templateName;
+    BiodataSession.templateAccent = widget.templateAccent;
+    BiodataSession.fullName = draft.fullName;
+    BiodataSession.dateOfBirth = _dob == null ? '' : '${_dob!.day.toString().padLeft(2, '0')}/${_dob!.month.toString().padLeft(2, '0')}/${_dob!.year}';
+    BiodataSession.gender = draft.gender ?? '';
+    BiodataSession.height = draft.height ?? '';
+    BiodataSession.maritalStatus = draft.maritalStatus ?? '';
+    BiodataSession.religion = draft.religion;
+    BiodataSession.community = draft.community;
+    BiodataSession.motherTongue = draft.motherTongue;
+    BiodataSession.city = draft.city;
+    if (draft.fullName.trim().isNotEmpty) BiodataSession.title = draft.fullName.trim();
+  }
+
   void _saveAndExit() {
     savedDraft = _makeDraft();
+    _syncSession();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
     messenger.showSnackBar(
@@ -98,6 +116,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
 
   void _goBack() {
     savedDraft = _makeDraft();
+    _syncSession();
     Navigator.of(context).maybePop();
   }
 
@@ -108,6 +127,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       return;
     }
     savedDraft = _makeDraft();
+    _syncSession();
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         builder: (_) => FamilyDetailsScreen(
