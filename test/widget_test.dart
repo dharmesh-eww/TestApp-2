@@ -1,30 +1,26 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:test_app/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('home dashboard shows the main creation entry point', (tester) async {
+    await tester.pumpWidget(const VivahBioApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Vivah Bio'), findsOneWidget);
+    expect(find.text('Let’s create your\nbiodata.'), findsOneWidget);
+    expect(find.text('Create new biodata'), findsOneWidget);
+    expect(find.text('Continue editing'), findsOneWidget);
+    expect(find.text('Find your style'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('create biodata action explains the next step is not implemented yet', (tester) async {
+    await tester.pumpWidget(const VivahBioApp());
+
+    await tester.tap(find.text('Get started'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(
+      find.text('Create biodata will be connected when that screen is implemented.'),
+      findsOneWidget,
+    );
   });
 }
