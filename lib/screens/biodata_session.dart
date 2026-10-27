@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BiodataSession {
   BiodataSession._();
@@ -112,6 +115,70 @@ class BiodataSession {
 
   static final List<SavedBiodata> saved = <SavedBiodata>[];
 
+  static Future<void> loadSaved() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final raw = preferences.getString('vivah_saved_biodatas');
+      if (raw == null || raw.isEmpty) return;
+      final decoded = jsonDecode(raw);
+      if (decoded is! List) return;
+      final loaded = <SavedBiodata>[];
+      for (final row in decoded) {
+        if (row is! Map) continue;
+        final rawData = row['data'];
+        final data = <String, Object?>{};
+        if (rawData is Map) {
+          rawData.forEach((key, value) {
+            final name = key.toString();
+            if (name == 'templateAccent' && value is int) {
+              data[name] = Color(value);
+            } else if (name == 'photoBytes' && value is String && value.isNotEmpty) {
+              data[name] = base64Decode(value);
+            } else {
+              data[name] = value;
+            }
+          });
+        }
+        loaded.add(SavedBiodata(
+          id: row['id'] as String? ?? 'draft-${DateTime.now().microsecondsSinceEpoch}',
+          title: row['title'] as String? ?? 'Untitled biodata',
+          updatedAt: DateTime.tryParse(row['updatedAt'] as String? ?? '') ?? DateTime.now(),
+          completed: row['completed'] as bool? ?? false,
+          templateName: row['templateName'] as String? ?? 'The Classic',
+          fullName: row['fullName'] as String? ?? '',
+          data: data,
+        ));
+      }
+      saved
+        ..clear()
+        ..addAll(loaded..sort((a, b) => b.updatedAt.compareTo(a.updatedAt)));
+    } catch (_) {
+      // Keep the current in-memory list if local storage is unavailable or invalid.
+    }
+  }
+
+  static Future<void> persistSaved() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final encoded = saved.map((item) => <String, Object?>{
+        'id': item.id,
+        'title': item.title,
+        'updatedAt': item.updatedAt.toIso8601String(),
+        'completed': item.completed,
+        'templateName': item.templateName,
+        'fullName': item.fullName,
+        'data': item.data.map((key, value) {
+          if (value is Color) return MapEntry(key, value.toARGB32());
+          if (value is Uint8List) return MapEntry(key, base64Encode(value));
+          return MapEntry(key, value);
+        }),
+      }).toList();
+      await preferences.setString('vivah_saved_biodatas', jsonEncode(encoded));
+    } catch (_) {
+      // Saving remains usable in memory if the device storage plugin is unavailable.
+    }
+  }
+
   static SavedBiodata save({bool completed = false}) {
     SavedBiodata? existing;
     for (final item in saved) { if (item.id == currentId) { existing = item; break; } }
@@ -130,6 +197,7 @@ class BiodataSession {
       saved[saved.indexOf(existing)] = item;
     }
     title = item.title;
+    unawaited(persistSaved());
     return item;
   }
 
