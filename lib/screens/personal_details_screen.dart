@@ -48,6 +48,19 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       _height = d.height; _maritalStatus = d.maritalStatus;
       _religion.text = d.religion; _community.text = d.community;
       _tongue.text = d.motherTongue; _city.text = d.city;
+    } else {
+      _name.text = BiodataSession.fullName;
+      final parts = BiodataSession.dateOfBirth.split('/');
+      if (parts.length == 3) {
+        _dob = DateTime.tryParse('${parts[2]}-${parts[1]}-${parts[0]}');
+      }
+      _gender = BiodataSession.gender.isEmpty ? null : BiodataSession.gender;
+      _height = BiodataSession.height.isEmpty ? null : BiodataSession.height;
+      _maritalStatus = BiodataSession.maritalStatus.isEmpty ? null : BiodataSession.maritalStatus;
+      _religion.text = BiodataSession.religion;
+      _community.text = BiodataSession.community;
+      _tongue.text = BiodataSession.motherTongue;
+      _city.text = BiodataSession.city;
     }
   }
 
