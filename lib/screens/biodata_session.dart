@@ -6,6 +6,7 @@ class BiodataSession {
   BiodataSession._();
 
   static String title = 'Untitled biodata';
+  static String currentId = 'current';
   static String templateName = 'The Classic';
   static Color templateAccent = const Color(0xFFB88A4A);
   static String fullName = '';
@@ -60,9 +61,9 @@ class BiodataSession {
 
   static SavedBiodata save({bool completed = false}) {
     SavedBiodata? existing;
-    for (final item in saved) { if (item.id == 'current') { existing = item; break; } }
+    for (final item in saved) { if (item.id == currentId) { existing = item; break; } }
     final item = SavedBiodata(
-      id: 'current',
+      id: currentId,
       title: fullName.trim().isEmpty ? title : fullName.trim(),
       updatedAt: DateTime.now(),
       completed: completed,
@@ -80,6 +81,7 @@ class BiodataSession {
 
   static void resetForNew(String newTemplate, Color accent) {
     title = 'Untitled biodata';
+    currentId = 'draft-${DateTime.now().microsecondsSinceEpoch}';
     templateName = newTemplate;
     templateAccent = accent;
     fullName = '';
