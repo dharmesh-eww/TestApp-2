@@ -6,7 +6,6 @@ import 'package:printing/printing.dart';
 
 import 'biodata_session.dart';
 import 'vivah_colors.dart';
-import 'preview_editor_screen.dart';
 
 class ExportShareScreen extends StatefulWidget {
   const ExportShareScreen({super.key});
@@ -171,7 +170,7 @@ class _ExportShareScreenState extends State<ExportShareScreen> {
         const SizedBox(height: 10),
         OutlinedButton.icon(onPressed: _saveOrPrint, style: OutlinedButton.styleFrom(foregroundColor: VivahColors.plum, padding: const EdgeInsets.symmetric(vertical: 15), side: const BorderSide(color: VivahColors.border)), icon: const Icon(Icons.print_outlined), label: const Text('Print / Save PDF')),
         const SizedBox(height: 10),
-        OutlinedButton.icon(onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: BiodataSession.templateName, templateAccent: BiodataSession.templateAccent))), style: OutlinedButton.styleFrom(foregroundColor: VivahColors.plum, padding: const EdgeInsets.symmetric(vertical: 15), side: const BorderSide(color: VivahColors.border)), icon: const Icon(Icons.arrow_back_rounded), label: const Text('Back to preview')),
+        OutlinedButton.icon(onPressed: () => Navigator.pop(context), style: OutlinedButton.styleFrom(foregroundColor: VivahColors.plum, padding: const EdgeInsets.symmetric(vertical: 15), side: const BorderSide(color: VivahColors.border)), icon: const Icon(Icons.arrow_back_rounded), label: const Text('Back to preview')),
         const SizedBox(height: 8),
         TextButton.icon(onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst), icon: const Icon(Icons.home_outlined), label: const Text('Back to home')),
       ],
