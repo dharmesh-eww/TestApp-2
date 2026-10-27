@@ -57,6 +57,59 @@ class BiodataSession {
 
   static bool get hasContent => fullName.trim().isNotEmpty;
 
+  static Map<String, Object?> snapshot() => <String, Object?>{
+    'templateName': templateName, 'templateAccent': templateAccent,
+    'fullName': fullName, 'dateOfBirth': dateOfBirth, 'gender': gender,
+    'height': height, 'maritalStatus': maritalStatus, 'religion': religion,
+    'community': community, 'motherTongue': motherTongue, 'city': city,
+    'fatherName': fatherName, 'fatherOccupation': fatherOccupation,
+    'motherName': motherName, 'motherOccupation': motherOccupation,
+    'brothers': brothers, 'sisters': sisters, 'familyType': familyType,
+    'familyValues': familyValues, 'familyBackground': familyBackground,
+    'qualification': qualification, 'course': course, 'institution': institution,
+    'graduationYear': graduationYear, 'employmentStatus': employmentStatus,
+    'occupation': occupation, 'company': company, 'workLocation': workLocation,
+    'income': income, 'includePartnerPreferences': includePartnerPreferences,
+    'partnerMinAge': partnerMinAge, 'partnerMaxAge': partnerMaxAge,
+    'partnerHeight': partnerHeight, 'partnerEducation': partnerEducation,
+    'partnerOccupation': partnerOccupation, 'partnerLocation': partnerLocation,
+    'partnerNotes': partnerNotes, 'photoBytes': photoBytes, 'phone': phone,
+    'email': email, 'contactCity': contactCity, 'showPhone': showPhone,
+    'showEmail': showEmail,
+  };
+
+  static void restore(SavedBiodata item) {
+    final data = item.data;
+    String stringValue(String key, [String fallback = '']) => data[key] as String? ?? fallback;
+    int intValue(String key) => data[key] as int? ?? 0;
+    bool boolValue(String key) => data[key] as bool? ?? false;
+    templateName = stringValue('templateName', item.templateName);
+    templateAccent = data['templateAccent'] as Color? ?? templateAccent;
+    title = item.title;
+    currentId = item.id;
+    fullName = stringValue('fullName', item.fullName);
+    dateOfBirth = stringValue('dateOfBirth'); gender = stringValue('gender');
+    height = stringValue('height'); maritalStatus = stringValue('maritalStatus');
+    religion = stringValue('religion'); community = stringValue('community');
+    motherTongue = stringValue('motherTongue'); city = stringValue('city');
+    fatherName = stringValue('fatherName'); fatherOccupation = stringValue('fatherOccupation');
+    motherName = stringValue('motherName'); motherOccupation = stringValue('motherOccupation');
+    brothers = intValue('brothers'); sisters = intValue('sisters');
+    familyType = stringValue('familyType'); familyValues = stringValue('familyValues');
+    familyBackground = stringValue('familyBackground');
+    qualification = stringValue('qualification'); course = stringValue('course');
+    institution = stringValue('institution'); graduationYear = stringValue('graduationYear');
+    employmentStatus = stringValue('employmentStatus'); occupation = stringValue('occupation');
+    company = stringValue('company'); workLocation = stringValue('workLocation');
+    income = stringValue('income'); includePartnerPreferences = boolValue('includePartnerPreferences');
+    partnerMinAge = stringValue('partnerMinAge', '21'); partnerMaxAge = stringValue('partnerMaxAge', '35');
+    partnerHeight = stringValue('partnerHeight'); partnerEducation = stringValue('partnerEducation');
+    partnerOccupation = stringValue('partnerOccupation'); partnerLocation = stringValue('partnerLocation');
+    partnerNotes = stringValue('partnerNotes'); photoBytes = data['photoBytes'] as Uint8List?;
+    phone = stringValue('phone'); email = stringValue('email'); contactCity = stringValue('contactCity');
+    showPhone = boolValue('showPhone'); showEmail = boolValue('showEmail');
+  }
+
   static final List<SavedBiodata> saved = <SavedBiodata>[];
 
   static SavedBiodata save({bool completed = false}) {
