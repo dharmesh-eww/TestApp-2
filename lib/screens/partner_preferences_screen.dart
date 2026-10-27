@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
 import 'education_career_screen.dart';
-import 'home_screen.dart';
+import 'vivah_colors.dart';
 import 'photo_contact_screen.dart';
 
 class PartnerPreferencesScreen extends StatefulWidget {
