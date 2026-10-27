@@ -55,3 +55,36 @@ void main() {
     expect(find.text('The Classic'), findsNothing);
   });
 }
+
+  testWidgets('using a template opens personal details and keeps template context', (tester) async {
+    await tester.pumpWidget(const VivahBioApp());
+    await tester.tap(find.text('Get started'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('The Classic'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Use This Template'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Personal details'), findsOneWidget);
+    expect(find.text('The Classic'), findsOneWidget);
+    expect(find.text('Full name'), findsOneWidget);
+    expect(find.text('Save & Exit'), findsOneWidget);
+    expect(find.text('Continue'), findsOneWidget);
+  });
+
+  testWidgets('personal details requires a full name before continuing', (tester) async {
+    await tester.view.setSize(const Size(800, 1400));
+    addTearDown(tester.view.resetSize);
+    await tester.pumpWidget(const VivahBioApp());
+    await tester.tap(find.text('Get started'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('The Classic'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Use This Template'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please enter your full name.'), findsOneWidget);
+  });
