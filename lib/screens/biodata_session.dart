@@ -59,7 +59,8 @@ class BiodataSession {
   static final List<SavedBiodata> saved = <SavedBiodata>[];
 
   static SavedBiodata save({bool completed = false}) {
-    final existing = saved.where((item) => item.id == 'current').firstOrNull;
+    SavedBiodata? existing;
+    for (final item in saved) { if (item.id == 'current') { existing = item; break; } }
     final item = SavedBiodata(
       id: 'current',
       title: fullName.trim().isEmpty ? title : fullName.trim(),
