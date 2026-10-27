@@ -46,10 +46,15 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
   }
 
   void _continue() {
-    final min = int.tryParse(_minAge.text);
-    final max = int.tryParse(_maxAge.text);
-    if (_include && min != null && max != null && min > max) {
-      setState(() => _ageError = 'Minimum age must not exceed maximum age.');
+    final minText = _minAge.text.trim();
+    final maxText = _maxAge.text.trim();
+    final min = int.tryParse(minText);
+    final max = int.tryParse(maxText);
+    if (_include && (minText.isNotEmpty || maxText.isNotEmpty) &&
+        (min == null || max == null || min < 18 || max > 100 || min > max)) {
+      setState(() => _ageError = min != null && max != null && min > max
+          ? 'Minimum age must not exceed maximum age.'
+          : 'Enter a valid age range from 18 to 100, or leave both blank.');
       return;
     }
     setState(() => _ageError = null);
