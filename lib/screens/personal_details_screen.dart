@@ -84,14 +84,20 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
 
   void _saveAndExit() {
     savedDraft = _makeDraft();
+    final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.showSnackBar(
       const SnackBar(
         content: Text('Draft saved for this app session.'),
         behavior: SnackBarBehavior.floating,
         backgroundColor: VivahColors.plumDark,
       ),
     );
+  }
+
+  void _goBack() {
+    savedDraft = _makeDraft();
+    Navigator.of(context).maybePop();
   }
 
   void _continue() {
@@ -123,7 +129,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
             child: Row(children: [
               IconButton(
                 tooltip: 'Back',
-                onPressed: () => Navigator.of(context).maybePop(),
+                onPressed: _goBack,
                 icon: const Icon(Icons.arrow_back_rounded, color: VivahColors.plumDark),
               ),
               const Expanded(child: Text('Create biodata', style: TextStyle(
