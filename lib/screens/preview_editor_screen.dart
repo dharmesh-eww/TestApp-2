@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
-import 'personal_details_screen.dart';
-import 'family_details_screen.dart';
 import 'export_share_screen.dart';
 import 'vivah_colors.dart';
 
@@ -106,7 +104,7 @@ class _PreviewEditorScreenState extends State<PreviewEditorScreen> {
       ),
       body: Column(children: [
         Padding(padding: const EdgeInsets.fromLTRB(18, 12, 18, 12), child: Wrap(spacing: 8, runSpacing: 8, children: [
-          OutlinedButton.icon(onPressed: () { PersonalDetailsScreen.savedDraft = null; FamilyDetailsScreen.savedDraft = null; Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PersonalDetailsScreen(templateName: _template, templateAccent: _accent))); }, icon: const Icon(Icons.edit_outlined, size: 17), label: const Text('Edit details')),
+          OutlinedButton.icon(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.edit_outlined, size: 17), label: const Text('Edit details')),
           OutlinedButton.icon(onPressed: _chooseTemplate, icon: const Icon(Icons.dashboard_customize_outlined, size: 17), label: const Text('Change template')),
           OutlinedButton.icon(onPressed: _customize, icon: const Icon(Icons.palette_outlined, size: 17), label: const Text('Customize')),
         ])),
