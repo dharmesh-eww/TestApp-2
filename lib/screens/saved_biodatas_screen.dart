@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
+import 'personal_details_screen.dart';
+import 'family_details_screen.dart';
 import 'vivah_colors.dart';
 import 'preview_editor_screen.dart';
 import 'template_selection_screen.dart';
@@ -87,6 +89,8 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
 
   void _open(SavedBiodata item) {
     BiodataSession.restore(item);
+    PersonalDetailsScreen.savedDraft = null;
+    FamilyDetailsScreen.savedDraft = null;
     Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent)));
   }
 
