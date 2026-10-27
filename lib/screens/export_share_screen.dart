@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import 'biodata_session.dart';
-import 'home_screen.dart';
+import 'vivah_colors.dart';
 import 'preview_editor_screen.dart';
 
 class ExportShareScreen extends StatefulWidget {
