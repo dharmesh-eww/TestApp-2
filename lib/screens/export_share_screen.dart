@@ -51,6 +51,11 @@ class _ExportShareScreenState extends State<ExportShareScreen> {
         pw.Container(height: 3, color: accent),
         pw.SizedBox(height: 18),
         pw.Center(child: pw.Text(BiodataSession.templateName.toUpperCase(), style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: accent, letterSpacing: 2))),
+        if (BiodataSession.photoBytes != null) ...[
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(pw.MemoryImage(BiodataSession.photoBytes!), height: 95, width: 75, fit: pw.BoxFit.cover)),
+          pw.SizedBox(height: 10),
+        ],
         pw.SizedBox(height: 12),
         pw.Center(child: pw.Text(BiodataSession.fullName.trim().isEmpty ? 'Marriage Biodata' : BiodataSession.fullName.trim(), textAlign: pw.TextAlign.center, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, color: PdfColor.fromInt(0xFF432032)))),
         pw.SizedBox(height: 6),
