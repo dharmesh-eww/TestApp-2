@@ -191,11 +191,8 @@ class BiodataSession {
       fullName: fullName,
       data: snapshot(),
     );
-    if (existing == null) {
-      saved.insert(0, item);
-    } else {
-      saved[saved.indexOf(existing)] = item;
-    }
+    if (existing != null) saved.remove(existing);
+    saved.insert(0, item);
     title = item.title;
     unawaited(persistSaved());
     return item;
