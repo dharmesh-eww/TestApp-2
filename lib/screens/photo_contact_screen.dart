@@ -49,8 +49,8 @@ class _PhotoContactScreenState extends State<PhotoContactScreen> {
     BiodataSession.phone = _phone.text.trim();
     BiodataSession.email = _email.text.trim();
     BiodataSession.contactCity = _city.text.trim();
-    BiodataSession.showPhone = _showPhone && _phone.text.trim().isNotEmpty;
-    BiodataSession.showEmail = _showEmail && _email.text.trim().isNotEmpty;
+    BiodataSession.showPhone = _showPhone;
+    BiodataSession.showEmail = _showEmail;
   }
 
   void _review() {
