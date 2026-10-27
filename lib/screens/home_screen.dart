@@ -329,7 +329,7 @@ class _RecentDraftCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(item.completed ? 'Ready to export' : 'Draft · ${item.templateName}', style: const TextStyle(color: VivahColors.muted, fontSize: 11)),
         const SizedBox(height: 8),
-        TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent))), style: TextButton.styleFrom(foregroundColor: VivahColors.plum, padding: EdgeInsets.zero, minimumSize: const Size(0, 28), tapTargetSize: MaterialTapTargetSize.shrinkWrap), child: const Text('Continue editing')),
+        TextButton(onPressed: () { BiodataSession.restore(item); Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent))); }, style: TextButton.styleFrom(foregroundColor: VivahColors.plum, padding: EdgeInsets.zero, minimumSize: const Size(0, 28), tapTargetSize: MaterialTapTargetSize.shrinkWrap), child: const Text('Continue editing')),
       ])),
     ]),
   );
