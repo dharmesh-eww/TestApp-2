@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_screen.dart';
 
@@ -45,8 +46,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _finish() {
+  Future<void> _finish() async {
     OnboardingScreen.completedInSession = true;
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      await preferences.setBool('vivah_onboarding_completed', true);
+    } catch (_) {
+      // Continue into the app even if this device cannot persist preferences.
+    }
+    if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute<void>(builder: (_) => const HomeScreen()),
       (route) => false,
