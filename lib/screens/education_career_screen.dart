@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
-import 'home_screen.dart';
+import 'vivah_colors.dart';
 import 'partner_preferences_screen.dart';
 
 class EducationCareerScreen extends StatefulWidget {
