@@ -16,7 +16,6 @@ class PreviewEditorScreen extends StatefulWidget {
 class _PreviewEditorScreenState extends State<PreviewEditorScreen> {
   Color _accent = BiodataSession.templateAccent;
   String _template = BiodataSession.templateName;
-  bool _showDetails = true;
 
   @override
   void initState() {
@@ -128,7 +127,7 @@ class _PreviewEditorScreenState extends State<PreviewEditorScreen> {
                       if (BiodataSession.photoBytes != null) ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.memory(BiodataSession.photoBytes!, height: 82, width: 72, fit: BoxFit.cover)),
                       Text(name, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(color: VivahColors.plumDark, fontSize: 21, height: 1.1, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 6),
-                      Text([BiodataSession.ageText, BiodataSession.city].where((s) => s.isNotEmpty).join('  •  '), textAlign: TextAlign.center, style: const TextStyle(color: VivahColors.muted, fontSize: 9)),
+                      Text([BiodataSession.city].where((s) => s.isNotEmpty).join('  •  '), textAlign: TextAlign.center, style: const TextStyle(color: VivahColors.muted, fontSize: 9)),
                       const SizedBox(height: 16),
                       Expanded(child: ListView(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), children: [
                         _documentSection('PERSONAL DETAILS', [
@@ -213,7 +212,3 @@ Widget _documentSection(String title, List<({String label, String value})> pairs
   );
 }
 ({String label, String value}) _pair(String label, String value) => (label: label, value: value.trim());
-
-extension _SessionAge on BiodataSession {
-  static String get ageText => '';
-}
