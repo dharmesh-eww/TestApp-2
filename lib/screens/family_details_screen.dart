@@ -115,6 +115,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   void _saveAndExit() {
     FamilyDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
+    BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
     messenger.showSnackBar(
