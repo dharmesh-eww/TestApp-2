@@ -72,6 +72,16 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
       _sisters = draft.sisters;
       _familyType = draft.familyType;
       _familyValues = draft.familyValues;
+    } else {
+      _fatherName.text = BiodataSession.fatherName;
+      _fatherOccupation.text = BiodataSession.fatherOccupation;
+      _motherName.text = BiodataSession.motherName;
+      _motherOccupation.text = BiodataSession.motherOccupation;
+      _familyBackground.text = BiodataSession.familyBackground;
+      _brothers = BiodataSession.brothers;
+      _sisters = BiodataSession.sisters;
+      _familyType = BiodataSession.familyType.isEmpty ? null : BiodataSession.familyType;
+      _familyValues = BiodataSession.familyValues.isEmpty ? null : BiodataSession.familyValues;
     }
   }
 
