@@ -107,12 +107,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(_pages.length, (index) => AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: _page == index ? 24 : 7,
-            height: 7,
-            decoration: BoxDecoration(color: _page == index ? VivahColors.plum : VivahColors.border, borderRadius: BorderRadius.circular(8)),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: List.generate(_pages.length, (index) => Semantics(
+            button: true,
+            label: 'Go to introduction page ${index + 1}',
+            child: GestureDetector(
+              onTap: () => _pageController.animateToPage(index, duration: const Duration(milliseconds: 280), curve: Curves.easeOutCubic),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: _page == index ? 24 : 7,
+                height: 7,
+                decoration: BoxDecoration(color: _page == index ? VivahColors.plum : VivahColors.border, borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
           ))),
           const SizedBox(height: 22),
           SizedBox(width: double.infinity, child: FilledButton(
