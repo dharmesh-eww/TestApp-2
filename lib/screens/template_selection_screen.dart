@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
+import 'personal_details_screen.dart';
 
 enum BiodataTemplateCategory { classic, modern, traditional }
 
@@ -117,16 +118,14 @@ class _TemplateSelectionScreenState extends State<TemplateSelectionScreen> {
     final selected = _templates.where((item) => item.id == _selectedTemplateId);
     if (selected.isEmpty) return;
     final template = selected.first;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('${template.name} selected. Your details screen is the next step.'),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: VivahColors.plumDark,
-          duration: const Duration(seconds: 3),
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => PersonalDetailsScreen(
+          templateName: template.name,
+          templateAccent: template.accent,
         ),
-      );
+      ),
+    );
   }
 
   @override
