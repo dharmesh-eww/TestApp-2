@@ -54,7 +54,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
     setState(() {
       final index = BiodataSession.saved.indexWhere((entry) => entry.id == item.id);
       if (index >= 0) BiodataSession.saved[index] = item.copyWith(title: title, updatedAt: DateTime.now());
-      if (item.id == 'current') BiodataSession.title = title;
+      if (item.id == BiodataSession.currentId) BiodataSession.title = title;
     });
   }
 
