@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 
 import 'biodata_session.dart';
 import 'vivah_colors.dart';
-import 'partner_preferences_screen.dart';
 import 'preview_editor_screen.dart';
 
 class PhotoContactScreen extends StatefulWidget {
@@ -83,7 +82,7 @@ class _PhotoContactScreenState extends State<PhotoContactScreen> {
       Padding(
         padding: const EdgeInsets.fromLTRB(14, 8, 18, 14),
         child: Column(children: [
-          Row(children: [IconButton(tooltip: 'Back', onPressed: () { _save(); Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (_) => PartnerPreferencesScreen(templateName: widget.templateName, templateAccent: widget.templateAccent))); }, icon: const Icon(Icons.arrow_back_rounded, color: VivahColors.plumDark)), const Expanded(child: Text('Create biodata', style: TextStyle(color: VivahColors.plumDark, fontSize: 19, fontWeight: FontWeight.w800))), Flexible(child: Text(widget.templateName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: VivahColors.plum, fontSize: 11, fontWeight: FontWeight.w700)))]),
+          Row(children: [IconButton(tooltip: 'Back', onPressed: () { _save(); Navigator.pop(context); }, icon: const Icon(Icons.arrow_back_rounded, color: VivahColors.plumDark)), const Expanded(child: Text('Create biodata', style: TextStyle(color: VivahColors.plumDark, fontSize: 19, fontWeight: FontWeight.w800))), Flexible(child: Text(widget.templateName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: VivahColors.plum, fontSize: 11, fontWeight: FontWeight.w700)))]),
           const SizedBox(height: 7),
           const Row(children: [Text('STEP 5 OF 5', style: TextStyle(color: VivahColors.gold, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1)), Spacer(), Text('100% complete', style: TextStyle(color: VivahColors.muted, fontSize: 11))]),
           const SizedBox(height: 7),
