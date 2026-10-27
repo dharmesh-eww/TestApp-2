@@ -58,6 +58,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
       if (index >= 0) BiodataSession.saved[index] = item.copyWith(title: title, updatedAt: DateTime.now());
       if (item.id == BiodataSession.currentId) BiodataSession.title = title;
     });
+    BiodataSession.persistSaved();
   }
 
   Future<void> _delete(SavedBiodata item) async {
@@ -75,6 +76,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
     );
     if (confirmed != true) return;
     setState(() => BiodataSession.saved.removeWhere((entry) => entry.id == item.id));
+    BiodataSession.persistSaved();
   }
 
   void _duplicate(SavedBiodata item) {
@@ -84,6 +86,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
       updatedAt: DateTime.now(),
       completed: false,
     )));
+    BiodataSession.persistSaved();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('A separate copy was created.')));
   }
 
