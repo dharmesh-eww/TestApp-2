@@ -23,6 +23,7 @@ class _EducationCareerScreenState extends State<EducationCareerScreen> {
   String? _qualification = BiodataSession.qualification.isEmpty ? null : BiodataSession.qualification;
   String? _status = BiodataSession.employmentStatus.isEmpty ? null : BiodataSession.employmentStatus;
   String? _income = BiodataSession.income.isEmpty ? null : BiodataSession.income;
+  String? _yearError;
 
   @override
   void dispose() {
@@ -41,6 +42,19 @@ class _EducationCareerScreenState extends State<EducationCareerScreen> {
     BiodataSession.company = _company.text.trim();
     BiodataSession.workLocation = _location.text.trim();
     BiodataSession.income = _income ?? '';
+  }
+
+  void _continue() {
+    final yearText = _year.text.trim();
+    final year = int.tryParse(yearText);
+    final currentYear = DateTime.now().year;
+    if (yearText.isNotEmpty && (year == null || year < 1900 || (year > currentYear && _status != 'Student'))) {
+      setState(() => _yearError = _status == 'Student' ? 'Enter a year from 1900 onward.' : 'Enter a valid year no later than $currentYear.');
+      return;
+    }
+    setState(() => _yearError = null);
+    _save();
+    Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PartnerPreferencesScreen(templateName: widget.templateName, templateAccent: widget.templateAccent)));
   }
 
   void _exit() {
@@ -72,7 +86,8 @@ class _EducationCareerScreenState extends State<EducationCareerScreen> {
         _field(_institution, 'Institution name', Icons.account_balance_outlined),
         const SizedBox(height: 14),
         _label('Graduation year'),
-        TextField(controller: _year, keyboardType: TextInputType.number, maxLength: 4, decoration: _input('YYYY', Icons.calendar_today_outlined).copyWith(counterText: '')),
+        TextField(controller: _year, keyboardType: TextInputType.number, maxLength: 4, onChanged: (_) => setState(() => _yearError = null), decoration: _input('YYYY', Icons.calendar_today_outlined).copyWith(counterText: '')),
+        if (_yearError != null) Padding(padding: const EdgeInsets.only(top: 6), child: Text(_yearError!, style: const TextStyle(color: Colors.red, fontSize: 12))),
         const SizedBox(height: 24),
         const _GroupLabel('CAREER'),
         const SizedBox(height: 12),
@@ -93,7 +108,7 @@ class _EducationCareerScreenState extends State<EducationCareerScreen> {
         const SizedBox(height: 14),
         const Text('You can leave income and any other field blank. Your work status does not define your worth.', style: TextStyle(color: VivahColors.muted, fontSize: 12, height: 1.45)),
       ])),
-      _StepFooter(onSave: _exit, onContinue: () { _save(); Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PartnerPreferencesScreen(templateName: widget.templateName, templateAccent: widget.templateAccent))); }, continueLabel: 'Continue'),
+      _StepFooter(onSave: _exit, onContinue: _continue, continueLabel: 'Continue'),
     ])),
   );
 }
