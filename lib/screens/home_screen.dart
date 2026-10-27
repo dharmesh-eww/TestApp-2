@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'template_selection_screen.dart';
+import 'saved_biodatas_screen.dart';
 
 class VivahColors {
   static const plum = Color(0xFF642C45);
@@ -96,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => _showComingSoon(context, 'My biodatas'),
+                        onPressed: () => Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (_) => const SavedBiodatasScreen())),
                         style: TextButton.styleFrom(
                           foregroundColor: VivahColors.plum,
                           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -147,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                           title: 'Modern Minimal',
                           subtitle: 'Clean & confident',
                           style: _TemplateStyle.modern,
-                          onTap: () => _showComingSoon(context, 'Template selection'),
+                          onTap: () => _openTemplates(context),
                         ),
                         const SizedBox(width: 12),
                         _TemplateCard(
