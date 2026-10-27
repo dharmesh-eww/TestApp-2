@@ -5,6 +5,8 @@ import 'biodata_session.dart';
 import 'family_details_screen.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
+  static PersonalDetailsDraft? savedDraft;
+
   const PersonalDetailsScreen({super.key, required this.templateName, required this.templateAccent});
   final String templateName;
   final Color templateAccent;
@@ -27,7 +29,6 @@ class PersonalDetailsDraft {
 }
 
 class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
-  static PersonalDetailsDraft? savedDraft;
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
   final _religion = TextEditingController();
@@ -41,7 +42,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final d = savedDraft;
+    final d = PersonalDetailsScreen.savedDraft;
     if (d != null) {
       _name.text = d.fullName; _dob = d.dateOfBirth; _gender = d.gender;
       _height = d.height; _maritalStatus = d.maritalStatus;
@@ -101,7 +102,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   }
 
   void _saveAndExit() {
-    savedDraft = _makeDraft();
+    PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).popUntil((route) => route.isFirst);
