@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'biodata_session.dart';
-import 'home_screen.dart';
+import 'vivah_colors.dart';
 import 'partner_preferences_screen.dart';
 import 'preview_editor_screen.dart';
 
