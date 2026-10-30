@@ -61,7 +61,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final draft = FamilyDetailsScreen.FamilyDetailsScreen.savedDraft;
+    final draft = FamilyDetailsScreen.savedDraft;
     if (draft != null) {
       _fatherName.text = draft.fatherName;
       _fatherOccupation.text = draft.fatherOccupation;
@@ -123,7 +123,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   }
 
   void _saveAndExit() {
-    FamilyDetailsScreen.FamilyDetailsScreen.savedDraft = _makeDraft();
+    FamilyDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
