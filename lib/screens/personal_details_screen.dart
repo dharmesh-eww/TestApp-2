@@ -5,7 +5,7 @@ import 'biodata_session.dart';
 import 'family_details_screen.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
-  static PersonalDetailsDraft? savedDraft;
+  static PersonalDetailsDraft? PersonalDetailsScreen.savedDraft;
 
   const PersonalDetailsScreen({super.key, required this.templateName, required this.templateAccent});
   final String templateName;
@@ -42,7 +42,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final d = PersonalDetailsScreen.savedDraft;
+    final d = PersonalDetailsScreen.PersonalDetailsScreen.savedDraft;
     if (d != null) {
       _name.text = d.fullName; _dob = d.dateOfBirth; _gender = d.gender;
       _height = d.height; _maritalStatus = d.maritalStatus;
@@ -115,7 +115,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   }
 
   void _saveAndExit() {
-    PersonalDetailsScreen.savedDraft = _makeDraft();
+    PersonalDetailsScreen.PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
@@ -130,7 +130,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   }
 
   void _goBack() {
-    savedDraft = _makeDraft();
+    PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     Navigator.of(context).maybePop();
   }
@@ -141,7 +141,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
       _nameFocus.requestFocus();
       return;
     }
-    savedDraft = _makeDraft();
+    PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
