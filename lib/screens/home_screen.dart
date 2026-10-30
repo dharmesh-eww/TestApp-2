@@ -5,6 +5,7 @@ import 'vivah_colors.dart';
 import 'saved_biodatas_screen.dart';
 import 'biodata_session.dart';
 import 'preview_editor_screen.dart';
+import 'language_selection_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(22, 18, 22, 28),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _TopBar(onSettings: () => _showComingSoon(context, 'Settings')),
+                  _TopBar(onSettings: () => Navigator.of(context).push<void>(MaterialPageRoute<void>(builder: (_) => const LanguageSelectionScreen()))),
                   const SizedBox(height: 30),
                   const Text(
                     'YOUR STORY, BEAUTIFULLY PRESENTED',
