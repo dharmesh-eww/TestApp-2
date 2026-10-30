@@ -77,7 +77,7 @@ class _PartnerPreferencesScreenState extends State<PartnerPreferencesScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SwitchListTile.adaptive(
               contentPadding: EdgeInsets.zero,
-              activeColor: VivahColors.plum,
+              activeThumbColor: VivahColors.plum,
               title: const Text('Include partner preferences', style: TextStyle(color: VivahColors.ink, fontSize: 14, fontWeight: FontWeight.w700)),
               subtitle: const Text('Off by default. Your preferences stay out of the biodata unless you opt in.', style: TextStyle(color: VivahColors.muted, fontSize: 12, height: 1.4)),
               value: _include,
