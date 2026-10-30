@@ -42,7 +42,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final d = PersonalDetailsScreen.PersonalDetailsScreen.savedDraft;
+    final d = PersonalDetailsScreen.savedDraft;
     if (d != null) {
       _name.text = d.fullName; _dob = d.dateOfBirth; _gender = d.gender;
       _height = d.height; _maritalStatus = d.maritalStatus;
@@ -115,7 +115,7 @@ class _PersonalDetailsScreenState extends State<PersonalDetailsScreen> {
   }
 
   void _saveAndExit() {
-    PersonalDetailsScreen.PersonalDetailsScreen.savedDraft = _makeDraft();
+    PersonalDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
