@@ -89,7 +89,7 @@ void main() {
   });
 
   testWidgets('personal details requires a full name before continuing', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -101,7 +101,7 @@ void main() {
   });
 
   testWidgets('Personal Details Continue opens Family Details', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -115,7 +115,7 @@ void main() {
   });
 
   testWidgets('Family Details Continue opens Education and Career', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -131,7 +131,7 @@ void main() {
   });
 
   testWidgets('Education and Career Continue opens optional Partner Preferences', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -147,7 +147,7 @@ void main() {
   });
 
   testWidgets('Partner Preferences can remain off and continue to Photo and Contact', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -166,7 +166,7 @@ void main() {
   });
 
   testWidgets('photo and contact can be skipped and preview opens', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
@@ -187,7 +187,7 @@ void main() {
   });
 
   testWidgets('preview opens the PDF export screen', (tester) async {
-    await tester.view.physicalSize = const Size(800, 1400));
+    tester.view.physicalSize = const Size(800, 1400);
     addTearDown(tester.view.resetPhysicalSize);
     await pumpHome(tester);
     await openPersonalDetails(tester);
