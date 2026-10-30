@@ -5,7 +5,7 @@ import 'biodata_session.dart';
 import 'family_details_screen.dart';
 
 class PersonalDetailsScreen extends StatefulWidget {
-  static PersonalDetailsDraft? PersonalDetailsScreen.savedDraft;
+  static PersonalDetailsDraft? savedDraft;
 
   const PersonalDetailsScreen({super.key, required this.templateName, required this.templateAccent});
   final String templateName;
