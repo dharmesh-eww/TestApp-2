@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'vivah_colors.dart';
-import 'personal_details_screen.dart';
 import 'biodata_session.dart';
 import 'education_career_screen.dart';
 
