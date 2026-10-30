@@ -5,6 +5,8 @@ import 'home_screen.dart';
 import 'biodata_session.dart';
 import 'vivah_colors.dart';
 import 'onboarding_screen.dart';
+import 'language_selection_screen.dart';
+import '../localization/app_language.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,6 +33,23 @@ class _SplashScreenState extends State<SplashScreen> {
       // If preferences are unavailable, onboarding remains accessible and recoverable.
     }
     if (!mounted) return;
+    if (!AppLanguageController.hasSelectedLanguage.value) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) => LanguageSelectionScreen(
+            isInitial: true,
+            onSelected: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute<void>(
+                  builder: (_) => completed ? const HomeScreen() : const OnboardingScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      return;
+    }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => completed ? const HomeScreen() : const OnboardingScreen(),
