@@ -30,7 +30,7 @@ class FamilyDetailsDraft {
 }
 
 class FamilyDetailsScreen extends StatefulWidget {
-  static FamilyDetailsDraft? FamilyDetailsScreen.savedDraft;
+  static FamilyDetailsDraft? savedDraft;
 
   const FamilyDetailsScreen({
     super.key,
