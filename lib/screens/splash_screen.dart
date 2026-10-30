@@ -73,6 +73,9 @@ class _OrnamentPainter extends CustomPainter {
   _OrnamentPainter(this.color);
   final Color color;
   @override
+  bool shouldRepaint(covariant _OrnamentPainter oldDelegate) => oldDelegate.color != color;
+
+  @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = color..style = PaintingStyle.stroke..strokeWidth = 1.2;
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
