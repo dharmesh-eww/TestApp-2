@@ -30,7 +30,7 @@ class FamilyDetailsDraft {
 }
 
 class FamilyDetailsScreen extends StatefulWidget {
-  static FamilyDetailsDraft? savedDraft;
+  static FamilyDetailsDraft? FamilyDetailsScreen.savedDraft;
 
   const FamilyDetailsScreen({
     super.key,
@@ -61,7 +61,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    final draft = FamilyDetailsScreen.savedDraft;
+    final draft = FamilyDetailsScreen.FamilyDetailsScreen.savedDraft;
     if (draft != null) {
       _fatherName.text = draft.fatherName;
       _fatherOccupation.text = draft.fatherOccupation;
@@ -123,7 +123,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   }
 
   void _saveAndExit() {
-    FamilyDetailsScreen.savedDraft = _makeDraft();
+    FamilyDetailsScreen.FamilyDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     BiodataSession.save();
     final messenger = ScaffoldMessenger.of(context);
@@ -138,7 +138,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
   }
 
   void _continue() {
-    savedDraft = _makeDraft();
+    FamilyDetailsScreen.savedDraft = _makeDraft();
     _syncSession();
     FocusScope.of(context).unfocus();
     Navigator.of(context).push<void>(
@@ -166,7 +166,7 @@ class _FamilyDetailsScreenState extends State<FamilyDetailsScreen> {
                   IconButton(
                     tooltip: 'Back',
                     onPressed: () {
-                      savedDraft = _makeDraft();
+                      FamilyDetailsScreen.savedDraft = _makeDraft();
                       _syncSession();
                       Navigator.of(context).maybePop();
                     },
