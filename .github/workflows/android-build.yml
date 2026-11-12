@@ -48,7 +48,9 @@ jobs:
         run: flutter pub get
 
       - name: Analyze Flutter code
-        run: flutter analyze
+        # Keep deprecation/info diagnostics visible without blocking release builds.
+        # Warnings and errors still fail the workflow.
+        run: flutter analyze --no-fatal-infos
 
       - name: Build APK
         if: inputs.build_type == 'apk'
