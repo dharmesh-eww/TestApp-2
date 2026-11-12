@@ -95,7 +95,9 @@ const _templates = <BiodataTemplate>[
 enum _TemplateFilter { all, classic, modern, traditional }
 
 class TemplateSelectionScreen extends StatefulWidget {
-  const TemplateSelectionScreen({super.key});
+  const TemplateSelectionScreen({super.key, this.candidateName});
+
+  final String? candidateName;
 
   @override
   State<TemplateSelectionScreen> createState() => _TemplateSelectionScreenState();
@@ -121,6 +123,11 @@ class _TemplateSelectionScreenState extends State<TemplateSelectionScreen> {
     if (selected.isEmpty) return;
     final template = selected.first;
     BiodataSession.resetForNew(template.name, template.accent);
+    final candidateName = widget.candidateName?.trim() ?? '';
+    if (candidateName.isNotEmpty) {
+      BiodataSession.fullName = candidateName;
+      BiodataSession.title = candidateName;
+    }
     PersonalDetailsScreen.savedDraft = null;
     FamilyDetailsScreen.savedDraft = null;
     Navigator.of(context).push<void>(
