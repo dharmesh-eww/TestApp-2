@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'template_selection_screen.dart';
+import 'form_screen.dart';
 import 'vivah_colors.dart';
 import 'saved_biodatas_screen.dart';
 import 'biodata_session.dart';
@@ -10,6 +11,12 @@ import 'language_selection_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  Future<void> _openForm(BuildContext context) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(builder: (_) => const FormScreen()),
+    );
+  }
 
   Future<void> _openTemplates(BuildContext context) async {
     await Navigator.of(context).push<void>(
@@ -74,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _CreateCard(
-                    onTap: () => _openTemplates(context),
+                    onTap: () => _openForm(context),
                   ),
                   const SizedBox(height: 30),
                   Row(
