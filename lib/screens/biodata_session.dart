@@ -54,6 +54,7 @@ class BiodataSession {
   static Uint8List? photoBytes;
   static String phone = '';
   static String email = '';
+  static List<Map<String, Object?>> formSections = <Map<String, Object?>>[];
   static String contactCity = '';
   static bool showPhone = false;
   static bool showEmail = false;
@@ -78,6 +79,7 @@ class BiodataSession {
     'partnerOccupation': partnerOccupation, 'partnerLocation': partnerLocation,
     'partnerNotes': partnerNotes, 'photoBytes': photoBytes, 'phone': phone,
     'email': email, 'contactCity': contactCity, 'showPhone': showPhone,
+    'formSections': formSections,
     'showEmail': showEmail,
   };
 
@@ -111,6 +113,10 @@ class BiodataSession {
     partnerNotes = stringValue('partnerNotes'); photoBytes = data['photoBytes'] as Uint8List?;
     phone = stringValue('phone'); email = stringValue('email'); contactCity = stringValue('contactCity');
     showPhone = boolValue('showPhone'); showEmail = boolValue('showEmail');
+    final rawSections = data['formSections'];
+    formSections = rawSections is List
+        ? rawSections.whereType<Map>().map((section) => Map<String, Object?>.from(section)).toList()
+        : <Map<String, Object?>>[];
   }
 
   static final List<SavedBiodata> saved = <SavedBiodata>[];
@@ -244,6 +250,7 @@ class BiodataSession {
     contactCity = '';
     showPhone = false;
     showEmail = false;
+    formSections = <Map<String, Object?>>[];
   }
 }
 

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
 import 'export_share_screen.dart';
-import 'personal_details_screen.dart';
-import 'family_details_screen.dart';
 import 'vivah_colors.dart';
 
 class PreviewEditorScreen extends StatefulWidget {
@@ -132,7 +130,8 @@ class _PreviewEditorScreenState extends State<PreviewEditorScreen> {
                       Text([BiodataSession.city].where((s) => s.isNotEmpty).join('  •  '), textAlign: TextAlign.center, style: const TextStyle(color: VivahColors.muted, fontSize: 9)),
                       const SizedBox(height: 16),
                       Expanded(child: ListView(shrinkWrap: true, physics: const NeverScrollableScrollPhysics(), children: [
-                        _documentSection('PERSONAL DETAILS', [
+                        if (BiodataSession.formSections.isEmpty) ...[
+                       _documentSection('PERSONAL DETAILS', [
                           _pair('Date of birth', BiodataSession.dateOfBirth),
                           _pair('Gender', BiodataSession.gender),
                           _pair('Height', BiodataSession.height),
@@ -176,8 +175,22 @@ class _PreviewEditorScreenState extends State<PreviewEditorScreen> {
                           _pair('Email', BiodataSession.showEmail ? BiodataSession.email : ''),
                           _pair('City', BiodataSession.contactCity),
                         ], _accent),
-                      ])),
-                      const SizedBox(height: 8),
+                       ],
+                       if (BiodataSession.formSections.isNotEmpty)
+                         ...BiodataSession.formSections.map((section) {
+                           final rawFields = section['fields'] as List? ?? const [];
+                           final pairs = rawFields.whereType<Map>().map((field) => (
+                             label: field['label']?.toString() ?? 'Details',
+                             value: field['value']?.toString() ?? '',
+                           )).toList();
+                           return _documentSection(
+                             (section['title']?.toString() ?? 'DETAILS').toUpperCase(),
+                             pairs,
+                             _accent,
+                           );
+                         }),
+                       ])),
+                       const SizedBox(height: 8),
                       Container(height: 2, width: 40, color: _accent.withValues(alpha: .75)),
                     ]),
                   ),
