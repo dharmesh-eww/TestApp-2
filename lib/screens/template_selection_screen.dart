@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'vivah_colors.dart';
 import 'biodata_session.dart';
-import 'family_details_screen.dart';
-import 'personal_details_screen.dart';
+import 'preview_editor_screen.dart';
 
 enum BiodataTemplateCategory { classic, modern, traditional }
 
@@ -122,20 +121,17 @@ class _TemplateSelectionScreenState extends State<TemplateSelectionScreen> {
     final selected = _templates.where((item) => item.id == _selectedTemplateId);
     if (selected.isEmpty) return;
     final template = selected.first;
-    BiodataSession.resetForNew(template.name, template.accent);
+    BiodataSession.templateName = template.name;
+    BiodataSession.templateAccent = template.accent;
     final candidateName = widget.candidateName?.trim() ?? '';
     if (candidateName.isNotEmpty) {
       BiodataSession.fullName = candidateName;
       BiodataSession.title = candidateName;
     }
-    PersonalDetailsScreen.savedDraft = null;
-    FamilyDetailsScreen.savedDraft = null;
+    BiodataSession.save();
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
-        builder: (_) => PersonalDetailsScreen(
-          templateName: template.name,
-          templateAccent: template.accent,
-        ),
+        builder: (_) => PreviewEditorScreen(templateName: template.name, templateAccent: template.accent),
       ),
     );
   }

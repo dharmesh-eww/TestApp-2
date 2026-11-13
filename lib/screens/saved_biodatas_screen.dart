@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
-import 'personal_details_screen.dart';
-import 'family_details_screen.dart';
-import 'vivah_colors.dart';
+import 'form_screen.dart';
 import 'preview_editor_screen.dart';
-import 'template_selection_screen.dart';
+import 'vivah_colors.dart';
 
 enum _SavedFilter { all, drafts, completed }
 
@@ -91,10 +89,19 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
   }
 
   void _open(SavedBiodata item) {
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (_) => FormScreen(biodataId: item.id, initialName: item.fullName),
+    ));
+  }
+
+  void _export(SavedBiodata item) {
     BiodataSession.restore(item);
-    PersonalDetailsScreen.savedDraft = null;
-    FamilyDetailsScreen.savedDraft = null;
-    Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent)));
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (_) => PreviewEditorScreen(
+        templateName: item.templateName,
+        templateAccent: BiodataSession.templateAccent,
+      ),
+    ));
   }
 
   @override
@@ -107,7 +114,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
         foregroundColor: VivahColors.plumDark,
         elevation: 0,
         title: const Text('My Biodatas', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-        actions: [TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create new'))],
+        actions: [TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const FormScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create new'))],
       ),
       body: Column(children: [
         Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: Row(children: [
@@ -126,7 +133,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                 const SizedBox(height: 7),
                 Text(_filter == _SavedFilter.all ? 'Create your first biodata and it will appear here.' : _filter == _SavedFilter.drafts ? 'You have no saved drafts in this session.' : 'No completed biodatas yet.', textAlign: TextAlign.center, style: const TextStyle(color: VivahColors.muted, fontSize: 13, height: 1.4)),
                 const SizedBox(height: 18),
-                FilledButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create biodata')),
+                FilledButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const FormScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create biodata')),
               ])))
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
@@ -155,7 +162,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                           onSelected: (action) {
                             if (action == 'rename') _rename(item);
                             if (action == 'duplicate') _duplicate(item);
-                            if (action == 'export') _open(item);
+                            if (action == 'export') _export(item);
                             if (action == 'delete') _delete(item);
                           },
                           itemBuilder: (_) => const [

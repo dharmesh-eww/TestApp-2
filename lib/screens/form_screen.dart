@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'biodata_session.dart';
 import '../models/biodata_form_model.dart';
 import 'vivah_colors.dart';
 import 'template_selection_screen.dart';
@@ -21,7 +25,8 @@ class _FormScreenState extends State<FormScreen> {
   late List<BiodataSectionModel> _sections;
 
   // Profile image selection state
-  String? _profileImagePath; // Holds selected image tag/URL or indicator
+  String? _profileImagePath;
+  Uint8List? _profilePhotoBytes;
   String _profileImageLabel = 'No Photo';
 
   // Attachment images state
@@ -33,17 +38,145 @@ class _FormScreenState extends State<FormScreen> {
   @override
   void initState() {
     super.initState();
-    _sections = BiodataSectionModel.getInitialSections();
+    if (widget.biodataId != null) {
+      final existing = BiodataSession.saved.where((item) => item.id == widget.biodataId);
+      if (existing.isNotEmpty) BiodataSession.restore(existing.first);
+    } else {
+      BiodataSession.resetForNew('The Classic', const Color(0xFFB88A4A));
+    }
+
+    _sections = BiodataSession.formSections.isNotEmpty
+        ? BiodataSession.formSections.map((section) =>
+            BiodataSectionModel.fromJson(Map<String, dynamic>.from(section))).toList()
+        : BiodataSectionModel.getInitialSections();
 
     if (widget.initialName != null && widget.initialName!.isNotEmpty) {
-      final nameField = _sections
-          .firstWhere((s) => s.id == 'personal_details')
-          .fields
-          .firstWhere((f) => f.id == 'p_name');
+      final nameField = _sections.firstWhere((section) => section.id == 'personal_details')
+          .fields.firstWhere((field) => field.id == 'p_name');
       nameField.value = widget.initialName!;
     }
 
+    _profilePhotoBytes = BiodataSession.photoBytes;
+    _profileImagePath = _profilePhotoBytes == null ? null : 'selected';
+    _profileImageLabel = _profilePhotoBytes == null ? 'No Photo' : 'Photo selected';
+    _hydrateLegacyValues();
     _initializeControllers();
+  }
+
+  void _hydrateLegacyValues() {
+    final values = <String, String>{
+      'p_name': BiodataSession.fullName, 'p_dob': BiodataSession.dateOfBirth,
+      'p_gender': BiodataSession.gender, 'p_height': BiodataSession.height,
+      'p_marital': BiodataSession.maritalStatus, 'p_religion': BiodataSession.religion,
+      'p_caste': BiodataSession.community, 'p_mother_tongue': BiodataSession.motherTongue,
+      'p_city': BiodataSession.city, 'f_father_name': BiodataSession.fatherName,
+      'f_father_occupation': BiodataSession.fatherOccupation, 'f_mother_name': BiodataSession.motherName,
+      'f_mother_occupation': BiodataSession.motherOccupation,
+      'f_brother': BiodataSession.brothers == 0 ? '' : BiodataSession.brothers.toString(),
+      'f_sister': BiodataSession.sisters == 0 ? '' : BiodataSession.sisters.toString(),
+      'f_family_type': BiodataSession.familyType, 'f_family_values': BiodataSession.familyValues,
+      'f_background': BiodataSession.familyBackground, 'e_qualification': BiodataSession.qualification,
+      'e_course': BiodataSession.course, 'e_institution': BiodataSession.institution,
+      'e_graduation_year': BiodataSession.graduationYear, 'e_employment': BiodataSession.employmentStatus,
+      'e_occupation': BiodataSession.occupation, 'e_company': BiodataSession.company,
+      'e_work_location': BiodataSession.workLocation, 'e_income': BiodataSession.income,
+      'pp_age': '${BiodataSession.partnerMinAge}-${BiodataSession.partnerMaxAge}',
+      'pp_height': BiodataSession.partnerHeight, 'pp_education': BiodataSession.partnerEducation,
+      'pp_occupation': BiodataSession.partnerOccupation, 'pp_location': BiodataSession.partnerLocation,
+      'pp_notes': BiodataSession.partnerNotes, 'c_phone': BiodataSession.phone,
+      'c_email': BiodataSession.email, 'c_city': BiodataSession.contactCity,
+    };
+    for (final section in _sections) {
+      for (final field in section.fields) {
+        if (field.value.isEmpty && (values[field.id] ?? '').isNotEmpty) {
+          field.value = values[field.id]!;
+        }
+      }
+    }
+  }
+
+  void _saveFormToSession() {
+    BiodataSession.formSections = _sections.map((section) => section.toJson()).toList();
+    BiodataSession.photoBytes = _profilePhotoBytes;
+    final names = _sections.expand((section) => section.fields)
+        .where((field) => field.id == 'p_name').map((field) => field.value.trim());
+    final name = names.isEmpty ? '' : names.first;
+    String value(String id) {
+      for (final section in _sections) {
+        for (final field in section.fields) {
+          if (field.id == id) return field.value.trim();
+        }
+      }
+      return '';
+    }
+
+    BiodataSession.fullName = name;
+    BiodataSession.dateOfBirth = value('p_dob');
+    BiodataSession.gender = value('p_gender');
+    BiodataSession.height = value('p_height');
+    BiodataSession.maritalStatus = value('p_marital');
+    BiodataSession.religion = value('p_religion');
+    BiodataSession.community = value('p_caste');
+    BiodataSession.motherTongue = value('p_mother_tongue');
+    BiodataSession.city = value('p_city');
+    BiodataSession.fatherName = value('f_father_name');
+    BiodataSession.fatherOccupation = value('f_father_occupation');
+    BiodataSession.motherName = value('f_mother_name');
+    BiodataSession.motherOccupation = value('f_mother_occupation');
+    BiodataSession.brothers = int.tryParse(value('f_brother')) ?? 0;
+    BiodataSession.sisters = int.tryParse(value('f_sister')) ?? 0;
+    BiodataSession.familyType = value('f_family_type');
+    BiodataSession.familyValues = value('f_family_values');
+    BiodataSession.familyBackground = value('f_background');
+    BiodataSession.qualification = value('e_qualification');
+    BiodataSession.course = value('e_course');
+    BiodataSession.institution = value('e_institution');
+    BiodataSession.graduationYear = value('e_graduation_year');
+    BiodataSession.employmentStatus = value('e_employment');
+    BiodataSession.occupation = value('e_occupation');
+    BiodataSession.company = value('e_company');
+    BiodataSession.workLocation = value('e_work_location');
+    BiodataSession.income = value('e_income');
+    final preferredAge = value('pp_age').split('-');
+    if (preferredAge.length == 2) {
+      BiodataSession.partnerMinAge = preferredAge.first.trim();
+      BiodataSession.partnerMaxAge = preferredAge.last.trim();
+    }
+    BiodataSession.partnerHeight = value('pp_height');
+    BiodataSession.partnerEducation = value('pp_education');
+    BiodataSession.partnerOccupation = value('pp_occupation');
+    BiodataSession.partnerLocation = value('pp_location');
+    BiodataSession.partnerNotes = value('pp_notes');
+    BiodataSession.includePartnerPreferences = [
+      value('pp_age'), value('pp_height'), value('pp_education'),
+      value('pp_occupation'), value('pp_location'), value('pp_notes'),
+    ].any((entry) => entry.isNotEmpty);
+    BiodataSession.phone = value('c_phone');
+    BiodataSession.email = value('c_email');
+    BiodataSession.contactCity = value('c_city');
+    BiodataSession.title = name.isEmpty ? 'Untitled biodata' : name;
+    BiodataSession.save();
+  }
+
+  Future<void> _pickProfilePhoto(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 88,
+        maxWidth: 1800,
+      );
+      if (image == null) return;
+      final bytes = await image.readAsBytes();
+      if (!mounted) return;
+      setState(() {
+        _profilePhotoBytes = bytes;
+        _profileImagePath = 'selected';
+        _profileImageLabel = 'Photo selected';
+      });
+      BiodataSession.photoBytes = bytes;
+    } catch (_) {
+      if (mounted) _showToast('Could not select the photo. Please try again.');
+    }
   }
 
   void _initializeControllers() {
@@ -120,11 +253,7 @@ class _FormScreenState extends State<FormScreen> {
                   title: const Text('Choose from Gallery'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    setState(() {
-                      _profileImagePath = 'selected_gallery';
-                      _profileImageLabel = 'Gallery Photo Selected';
-                    });
-                    _showToast('Photo selected from Gallery');
+                    _pickProfilePhoto(ImageSource.gallery);
                   },
                 ),
                 ListTile(
@@ -142,11 +271,7 @@ class _FormScreenState extends State<FormScreen> {
                   title: const Text('Take a Photo'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    setState(() {
-                      _profileImagePath = 'selected_camera';
-                      _profileImageLabel = 'Camera Photo Captured';
-                    });
-                    _showToast('Photo captured from Camera');
+                    _pickProfilePhoto(ImageSource.camera);
                   },
                 ),
                 if (_profileImagePath != null)
@@ -167,6 +292,8 @@ class _FormScreenState extends State<FormScreen> {
                       Navigator.pop(ctx);
                       setState(() {
                         _profileImagePath = null;
+                        _profilePhotoBytes = null;
+                        BiodataSession.photoBytes = null;
                         _profileImageLabel = 'No Photo';
                       });
                       _showToast('Profile photo removed');
@@ -720,6 +847,8 @@ class _FormScreenState extends State<FormScreen> {
     setState(() {
       _sections = BiodataSectionModel.getInitialSections();
       _profileImagePath = null;
+      _profilePhotoBytes = null;
+      BiodataSession.photoBytes = null;
       _profileImageLabel = 'No Photo';
       _attachmentImages.clear();
       _initializeControllers();
@@ -920,11 +1049,14 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                   ),
                   child: Center(
-                    child: _profileImagePath != null
-                        ? const Icon(
-                            Icons.person_rounded,
-                            size: 44,
-                            color: _FormColors.primary,
+                    child: _profilePhotoBytes != null
+                        ? ClipOval(
+                            child: Image.memory(
+                              _profilePhotoBytes!,
+                              width: 76,
+                              height: 76,
+                              fit: BoxFit.cover,
+                            ),
                           )
                         : const Icon(
                             Icons.person_add_alt_1_outlined,
@@ -1523,7 +1655,8 @@ class _FormScreenState extends State<FormScreen> {
                       ? nameController.text.trim()
                       : 'Candidate Profile';
 
-                  _showToast('Biodata saved! Choose your template.');
+                  _saveFormToSession();
+                  _showToast('Details saved! Choose your template.');
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => TemplateSelectionScreen(
@@ -1534,7 +1667,7 @@ class _FormScreenState extends State<FormScreen> {
                 },
                 icon: const Icon(Icons.arrow_forward_rounded, size: 18),
                 label: const Text(
-                  'Save & Continue',
+                  'Next',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 style: ElevatedButton.styleFrom(

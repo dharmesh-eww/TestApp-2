@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'template_selection_screen.dart';
 import 'form_screen.dart';
 import 'vivah_colors.dart';
 import 'saved_biodatas_screen.dart';
 import 'biodata_session.dart';
-import 'preview_editor_screen.dart';
 import 'language_selection_screen.dart';
 
 
@@ -18,11 +16,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _openTemplates(BuildContext context) async {
-    await Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen()),
-    );
-  }
+  Future<void> _openTemplates(BuildContext context) => _openForm(context);
 
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context)
@@ -156,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                           title: 'Floral Grace',
                           subtitle: 'Soft & traditional',
                           style: _TemplateStyle.floral,
-                          onTap: () => _showComingSoon(context, 'Template selection'),
+                          onTap: () => _openTemplates(context),
                         ),
                       ],
                     ),
@@ -337,7 +331,7 @@ class _RecentDraftCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(item.completed ? 'Ready to export' : 'Draft · ${item.templateName}', style: const TextStyle(color: VivahColors.muted, fontSize: 11)),
         const SizedBox(height: 8),
-        TextButton(onPressed: () { BiodataSession.restore(item); Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent))); }, style: TextButton.styleFrom(foregroundColor: VivahColors.plum, padding: EdgeInsets.zero, minimumSize: const Size(0, 28), tapTargetSize: MaterialTapTargetSize.shrinkWrap), child: const Text('Continue editing')),
+        TextButton(onPressed: () { Navigator.push(context, MaterialPageRoute<void>(builder: (_) => FormScreen(biodataId: item.id, initialName: item.fullName))); }, style: TextButton.styleFrom(foregroundColor: VivahColors.plum, padding: EdgeInsets.zero, minimumSize: const Size(0, 28), tapTargetSize: MaterialTapTargetSize.shrinkWrap), child: const Text('Continue editing')),
       ])),
     ]),
   );
