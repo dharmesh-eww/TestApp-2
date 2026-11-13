@@ -1667,7 +1667,7 @@ class _FormScreenState extends State<FormScreen> {
                 },
                 icon: const Icon(Icons.arrow_forward_rounded, size: 18),
                 label: const Text(
-                  'Save & Continue',
+                  'Next',
                   style: TextStyle(fontWeight: FontWeight.w700),
                 ),
                 style: ElevatedButton.styleFrom(
