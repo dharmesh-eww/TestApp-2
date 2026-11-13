@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
-import 'personal_details_screen.dart';
-import 'family_details_screen.dart';
+import 'form_screen.dart';
 import 'vivah_colors.dart';
-import 'preview_editor_screen.dart';
-import 'template_selection_screen.dart';
 
 enum _SavedFilter { all, drafts, completed }
 
@@ -91,10 +88,9 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
   }
 
   void _open(SavedBiodata item) {
-    BiodataSession.restore(item);
-    PersonalDetailsScreen.savedDraft = null;
-    FamilyDetailsScreen.savedDraft = null;
-    Navigator.push(context, MaterialPageRoute<void>(builder: (_) => PreviewEditorScreen(templateName: item.templateName, templateAccent: BiodataSession.templateAccent)));
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (_) => FormScreen(biodataId: item.id, initialName: item.fullName),
+    ));
   }
 
   @override
@@ -107,7 +103,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
         foregroundColor: VivahColors.plumDark,
         elevation: 0,
         title: const Text('My Biodatas', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-        actions: [TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create new'))],
+        actions: [TextButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const FormScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create new'))],
       ),
       body: Column(children: [
         Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: Row(children: [
