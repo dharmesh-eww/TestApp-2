@@ -42,7 +42,7 @@ class _FormScreenState extends State<FormScreen> {
       final existing = BiodataSession.saved.where((item) => item.id == widget.biodataId);
       if (existing.isNotEmpty) BiodataSession.restore(existing.first);
     } else {
-      BiodataSession.resetForNew(BiodataSession.templateName, BiodataSession.templateAccent);
+      BiodataSession.resetForNew('The Classic', const Color(0xFFB88A4A));
     }
 
     _sections = BiodataSession.formSections.isNotEmpty
