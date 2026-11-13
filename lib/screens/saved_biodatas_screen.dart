@@ -122,7 +122,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                 const SizedBox(height: 7),
                 Text(_filter == _SavedFilter.all ? 'Create your first biodata and it will appear here.' : _filter == _SavedFilter.drafts ? 'You have no saved drafts in this session.' : 'No completed biodatas yet.', textAlign: TextAlign.center, style: const TextStyle(color: VivahColors.muted, fontSize: 13, height: 1.4)),
                 const SizedBox(height: 18),
-                FilledButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const TemplateSelectionScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create biodata')),
+                FilledButton.icon(onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const FormScreen())), icon: const Icon(Icons.add_rounded), label: const Text('Create biodata')),
               ])))
             : ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
