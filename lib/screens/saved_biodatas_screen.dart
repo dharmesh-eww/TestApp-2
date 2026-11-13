@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'biodata_session.dart';
 import 'form_screen.dart';
+import 'preview_editor_screen.dart';
 import 'vivah_colors.dart';
 
 enum _SavedFilter { all, drafts, completed }
@@ -93,6 +94,16 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
     ));
   }
 
+  void _export(SavedBiodata item) {
+    BiodataSession.restore(item);
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (_) => PreviewEditorScreen(
+        templateName: item.templateName,
+        templateAccent: BiodataSession.templateAccent,
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final items = _visible;
@@ -151,7 +162,7 @@ class _SavedBiodatasScreenState extends State<SavedBiodatasScreen> {
                           onSelected: (action) {
                             if (action == 'rename') _rename(item);
                             if (action == 'duplicate') _duplicate(item);
-                            if (action == 'export') _open(item);
+                            if (action == 'export') _export(item);
                             if (action == 'delete') _delete(item);
                           },
                           itemBuilder: (_) => const [
