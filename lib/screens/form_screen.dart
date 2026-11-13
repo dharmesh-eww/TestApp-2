@@ -101,7 +101,59 @@ class _FormScreenState extends State<FormScreen> {
     final names = _sections.expand((section) => section.fields)
         .where((field) => field.id == 'p_name').map((field) => field.value.trim());
     final name = names.isEmpty ? '' : names.first;
+    String value(String id) {
+      for (final section in _sections) {
+        for (final field in section.fields) {
+          if (field.id == id) return field.value.trim();
+        }
+      }
+      return '';
+    }
+
     BiodataSession.fullName = name;
+    BiodataSession.dateOfBirth = value('p_dob');
+    BiodataSession.gender = value('p_gender');
+    BiodataSession.height = value('p_height');
+    BiodataSession.maritalStatus = value('p_marital');
+    BiodataSession.religion = value('p_religion');
+    BiodataSession.community = value('p_caste');
+    BiodataSession.motherTongue = value('p_mother_tongue');
+    BiodataSession.city = value('p_city');
+    BiodataSession.fatherName = value('f_father_name');
+    BiodataSession.fatherOccupation = value('f_father_occupation');
+    BiodataSession.motherName = value('f_mother_name');
+    BiodataSession.motherOccupation = value('f_mother_occupation');
+    BiodataSession.brothers = int.tryParse(value('f_brother')) ?? 0;
+    BiodataSession.sisters = int.tryParse(value('f_sister')) ?? 0;
+    BiodataSession.familyType = value('f_family_type');
+    BiodataSession.familyValues = value('f_family_values');
+    BiodataSession.familyBackground = value('f_background');
+    BiodataSession.qualification = value('e_qualification');
+    BiodataSession.course = value('e_course');
+    BiodataSession.institution = value('e_institution');
+    BiodataSession.graduationYear = value('e_graduation_year');
+    BiodataSession.employmentStatus = value('e_employment');
+    BiodataSession.occupation = value('e_occupation');
+    BiodataSession.company = value('e_company');
+    BiodataSession.workLocation = value('e_work_location');
+    BiodataSession.income = value('e_income');
+    final preferredAge = value('pp_age').split('-');
+    if (preferredAge.length == 2) {
+      BiodataSession.partnerMinAge = preferredAge.first.trim();
+      BiodataSession.partnerMaxAge = preferredAge.last.trim();
+    }
+    BiodataSession.partnerHeight = value('pp_height');
+    BiodataSession.partnerEducation = value('pp_education');
+    BiodataSession.partnerOccupation = value('pp_occupation');
+    BiodataSession.partnerLocation = value('pp_location');
+    BiodataSession.partnerNotes = value('pp_notes');
+    BiodataSession.includePartnerPreferences = [
+      value('pp_age'), value('pp_height'), value('pp_education'),
+      value('pp_occupation'), value('pp_location'), value('pp_notes'),
+    ].any((entry) => entry.isNotEmpty);
+    BiodataSession.phone = value('c_phone');
+    BiodataSession.email = value('c_email');
+    BiodataSession.contactCity = value('c_city');
     BiodataSession.title = name.isEmpty ? 'Untitled biodata' : name;
     BiodataSession.save();
   }
