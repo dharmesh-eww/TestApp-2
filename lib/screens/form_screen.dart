@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'biodata_session.dart';
 import '../models/biodata_form_model.dart';
 import 'vivah_colors.dart';
@@ -22,7 +25,8 @@ class _FormScreenState extends State<FormScreen> {
   late List<BiodataSectionModel> _sections;
 
   // Profile image selection state
-  String? _profileImagePath; // Holds selected image tag/URL or indicator
+  String? _profileImagePath;
+  Uint8List? _profilePhotoBytes;
   String _profileImageLabel = 'No Photo';
 
   // Attachment images state
@@ -52,6 +56,9 @@ class _FormScreenState extends State<FormScreen> {
       nameField.value = widget.initialName!;
     }
 
+    _profilePhotoBytes = BiodataSession.photoBytes;
+    _profileImagePath = _profilePhotoBytes == null ? null : 'selected';
+    _profileImageLabel = _profilePhotoBytes == null ? 'No Photo' : 'Photo selected';
     _hydrateLegacyValues();
     _initializeControllers();
   }
@@ -90,12 +97,34 @@ class _FormScreenState extends State<FormScreen> {
 
   void _saveFormToSession() {
     BiodataSession.formSections = _sections.map((section) => section.toJson()).toList();
+    BiodataSession.photoBytes = _profilePhotoBytes;
     final names = _sections.expand((section) => section.fields)
         .where((field) => field.id == 'p_name').map((field) => field.value.trim());
     final name = names.isEmpty ? '' : names.first;
     BiodataSession.fullName = name;
     BiodataSession.title = name.isEmpty ? 'Untitled biodata' : name;
     BiodataSession.save();
+  }
+
+  Future<void> _pickProfilePhoto(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 88,
+        maxWidth: 1800,
+      );
+      if (image == null) return;
+      final bytes = await image.readAsBytes();
+      if (!mounted) return;
+      setState(() {
+        _profilePhotoBytes = bytes;
+        _profileImagePath = 'selected';
+        _profileImageLabel = 'Photo selected';
+      });
+      BiodataSession.photoBytes = bytes;
+    } catch (_) {
+      if (mounted) _showToast('Could not select the photo. Please try again.');
+    }
   }
 
   void _initializeControllers() {
@@ -172,11 +201,7 @@ class _FormScreenState extends State<FormScreen> {
                   title: const Text('Choose from Gallery'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    setState(() {
-                      _profileImagePath = 'selected_gallery';
-                      _profileImageLabel = 'Gallery Photo Selected';
-                    });
-                    _showToast('Photo selected from Gallery');
+                    _pickProfilePhoto(ImageSource.gallery);
                   },
                 ),
                 ListTile(
@@ -194,11 +219,7 @@ class _FormScreenState extends State<FormScreen> {
                   title: const Text('Take a Photo'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    setState(() {
-                      _profileImagePath = 'selected_camera';
-                      _profileImageLabel = 'Camera Photo Captured';
-                    });
-                    _showToast('Photo captured from Camera');
+                    _pickProfilePhoto(ImageSource.camera);
                   },
                 ),
                 if (_profileImagePath != null)
@@ -219,6 +240,8 @@ class _FormScreenState extends State<FormScreen> {
                       Navigator.pop(ctx);
                       setState(() {
                         _profileImagePath = null;
+                        _profilePhotoBytes = null;
+                        BiodataSession.photoBytes = null;
                         _profileImageLabel = 'No Photo';
                       });
                       _showToast('Profile photo removed');
@@ -772,6 +795,8 @@ class _FormScreenState extends State<FormScreen> {
     setState(() {
       _sections = BiodataSectionModel.getInitialSections();
       _profileImagePath = null;
+      _profilePhotoBytes = null;
+      BiodataSession.photoBytes = null;
       _profileImageLabel = 'No Photo';
       _attachmentImages.clear();
       _initializeControllers();
@@ -972,11 +997,14 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                   ),
                   child: Center(
-                    child: _profileImagePath != null
-                        ? const Icon(
-                            Icons.person_rounded,
-                            size: 44,
-                            color: _FormColors.primary,
+                    child: _profilePhotoBytes != null
+                        ? ClipOval(
+                            child: Image.memory(
+                              _profilePhotoBytes!,
+                              width: 76,
+                              height: 76,
+                              fit: BoxFit.cover,
+                            ),
                           )
                         : const Icon(
                             Icons.person_add_alt_1_outlined,
