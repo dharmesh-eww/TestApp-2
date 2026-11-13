@@ -150,7 +150,7 @@ class HomeScreen extends StatelessWidget {
                           title: 'Floral Grace',
                           subtitle: 'Soft & traditional',
                           style: _TemplateStyle.floral,
-                          onTap: () => _showComingSoon(context, 'Template selection'),
+                          onTap: () => _openTemplates(context),
                         ),
                       ],
                     ),
