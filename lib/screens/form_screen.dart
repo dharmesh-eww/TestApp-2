@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'biodata_session.dart';
 import '../models/biodata_form_model.dart';
 import 'vivah_colors.dart';
 import 'template_selection_screen.dart';
@@ -33,17 +34,68 @@ class _FormScreenState extends State<FormScreen> {
   @override
   void initState() {
     super.initState();
-    _sections = BiodataSectionModel.getInitialSections();
+    if (widget.biodataId != null) {
+      final existing = BiodataSession.saved.where((item) => item.id == widget.biodataId);
+      if (existing.isNotEmpty) BiodataSession.restore(existing.first);
+    } else {
+      BiodataSession.resetForNew(BiodataSession.templateName, BiodataSession.templateAccent);
+    }
+
+    _sections = BiodataSession.formSections.isNotEmpty
+        ? BiodataSession.formSections.map((section) =>
+            BiodataSectionModel.fromJson(Map<String, dynamic>.from(section))).toList()
+        : BiodataSectionModel.getInitialSections();
 
     if (widget.initialName != null && widget.initialName!.isNotEmpty) {
-      final nameField = _sections
-          .firstWhere((s) => s.id == 'personal_details')
-          .fields
-          .firstWhere((f) => f.id == 'p_name');
+      final nameField = _sections.firstWhere((section) => section.id == 'personal_details')
+          .fields.firstWhere((field) => field.id == 'p_name');
       nameField.value = widget.initialName!;
     }
 
+    _hydrateLegacyValues();
     _initializeControllers();
+  }
+
+  void _hydrateLegacyValues() {
+    final values = <String, String>{
+      'p_name': BiodataSession.fullName, 'p_dob': BiodataSession.dateOfBirth,
+      'p_gender': BiodataSession.gender, 'p_height': BiodataSession.height,
+      'p_marital': BiodataSession.maritalStatus, 'p_religion': BiodataSession.religion,
+      'p_caste': BiodataSession.community, 'p_mother_tongue': BiodataSession.motherTongue,
+      'p_city': BiodataSession.city, 'f_father_name': BiodataSession.fatherName,
+      'f_father_occupation': BiodataSession.fatherOccupation, 'f_mother_name': BiodataSession.motherName,
+      'f_mother_occupation': BiodataSession.motherOccupation,
+      'f_brother': BiodataSession.brothers == 0 ? '' : BiodataSession.brothers.toString(),
+      'f_sister': BiodataSession.sisters == 0 ? '' : BiodataSession.sisters.toString(),
+      'f_family_type': BiodataSession.familyType, 'f_family_values': BiodataSession.familyValues,
+      'f_background': BiodataSession.familyBackground, 'e_qualification': BiodataSession.qualification,
+      'e_course': BiodataSession.course, 'e_institution': BiodataSession.institution,
+      'e_graduation_year': BiodataSession.graduationYear, 'e_employment': BiodataSession.employmentStatus,
+      'e_occupation': BiodataSession.occupation, 'e_company': BiodataSession.company,
+      'e_work_location': BiodataSession.workLocation, 'e_income': BiodataSession.income,
+      'pp_age': '${BiodataSession.partnerMinAge}-${BiodataSession.partnerMaxAge}',
+      'pp_height': BiodataSession.partnerHeight, 'pp_education': BiodataSession.partnerEducation,
+      'pp_occupation': BiodataSession.partnerOccupation, 'pp_location': BiodataSession.partnerLocation,
+      'pp_notes': BiodataSession.partnerNotes, 'c_phone': BiodataSession.phone,
+      'c_email': BiodataSession.email, 'c_city': BiodataSession.contactCity,
+    };
+    for (final section in _sections) {
+      for (final field in section.fields) {
+        if (field.value.isEmpty && (values[field.id] ?? '').isNotEmpty) {
+          field.value = values[field.id]!;
+        }
+      }
+    }
+  }
+
+  void _saveFormToSession() {
+    BiodataSession.formSections = _sections.map((section) => section.toJson()).toList();
+    final names = _sections.expand((section) => section.fields)
+        .where((field) => field.id == 'p_name').map((field) => field.value.trim());
+    final name = names.isEmpty ? '' : names.first;
+    BiodataSession.fullName = name;
+    BiodataSession.title = name.isEmpty ? 'Untitled biodata' : name;
+    BiodataSession.save();
   }
 
   void _initializeControllers() {
@@ -1523,7 +1575,8 @@ class _FormScreenState extends State<FormScreen> {
                       ? nameController.text.trim()
                       : 'Candidate Profile';
 
-                  _showToast('Biodata saved! Choose your template.');
+                  _saveFormToSession();
+                  _showToast('Details saved! Choose your template.');
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => TemplateSelectionScreen(
